@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <!-- Styles -->
+        <link rel="stylesheet" href="/static/css/main.css">
+        <script src="scripts/setInitialData.js"></script>
+    </head>
+<body>
+    <div class="container">
+        <div class="to-do-app">
+            <h1>To Do List</h1>
+            <div class="set-task">
+                <div class="row date">
+                    <input type="datetime-local" id="datetime">
+                </div>
+                <div class="row task">
+                    <input 
+                        type="text" 
+                        id="input-field" 
+                        placeholder="Add your task" 
+                        autocomplete="off" 
+                        maxlength = "160" 
+                        required
+                    />
+                    <button id="add-task" class="primary-btn" onclick="addTask()">Add</button>
+                </div>
+            </div>
+            <div class="sort-row">
+                <button id="sort" class="sort-icon"><img src="/static/images/filter.png"></button>
+                <div class="sorting-options">
+                    <a id="recently-added" href="##">Recently added</a>
+                    <a id="deadline" href="##">Deadline</a>
+                    <a id="recently-completed" href="##">Recently completed items</a>
+                </div>
+            </div>
+            <ul id="task-list"></ul>
+            <div class="pop-up" id="pop-up">
+                <img src="/static/images/question-mark.png">
+                <h2>Are you sure?</h2>
+                <p>Do you really want to delete this record? This process cannot be undone</p>
+                <div class="button-line">
+                    <button id="delete-cancel" type="button">Cancel</button>
+                    <button id="delete-confirm" type="button">Yes, delete it</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/scripts/script.js"></script>
+</body>
+</html>

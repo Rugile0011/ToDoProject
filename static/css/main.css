@@ -1,0 +1,269 @@
+/* -------------------------------------------
+
+    BASE STYLES
+
+-------------------------------------------- */
+
+html { scroll-behavior: smooth; }
+
+body {
+    margin: 0;
+    font-family: ProximaRegular, sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #6f6f6f;
+    background-color: #f2f2f2;
+}
+
+a {
+    color: #32a1d1;
+    font: 400 14px ProximaRegular;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #2682aa;
+    text-decoration: underline;
+}
+
+button {
+    padding: 11px 24px;
+    border-radius: 23px;
+    float: right;
+}
+
+button:hover { 
+    cursor: pointer; 
+    background-color: #e5ceeb;
+    border-color: #551764;
+}
+
+.primary-btn {
+    color: #ffffff;
+    background-color: #6e1e86;
+    border: 1px solid #6f2879;
+    float: right;
+}
+
+.primary-btn:hover:not(:disabled), .primary-btn:active:not(:disabled) {
+    background-color: #39addf;
+    border-color: #39addf;
+}
+
+h1 {
+    text-align: center;
+}
+
+/* -------------------------------------------
+
+    GENERIC STYLES
+
+-------------------------------------------- */
+
+.container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 10px;
+    background: linear-gradient(125deg, #c03fc0, #551764);
+    box-sizing: border-box;
+}
+
+.to-do-app {
+    width: 100%;
+    max-width: 540px;
+    background: #fff;
+    margin: 100px auto 20px;
+    padding: 40px 30px 70px;
+    border-radius: 15px;
+}
+
+.set-task { display: flex; }
+
+.row {
+    display: flex;
+    float: right;
+    width: 380px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #dfd9d9;
+    border-radius: 30px;
+    padding-left: 20px;
+    margin-bottom: 30px;
+}
+
+.row.date { width: 220px; }
+
+input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 10px;
+    font-weight: 14px;
+}
+
+.hidden { display: none; }
+
+/* -------------------------------------------
+
+    GENERIC POPUP STYLES
+
+-------------------------------------------- */
+
+.pop-up {
+    width: 400px;
+    border: 5px solid rgb(201, 160, 198);
+    background: #f7f4f4;
+    border-radius: 10px;
+    position: absolute;
+    left: 965px;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 0 30px 30px;
+    color: #363636;
+    visibility: hidden;
+    transition: transform 0.4s, top 0.4s;
+}
+
+.open-pop-up {
+    visibility: visible;
+    top: 42%;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.pop-up img {
+    width: 100px;
+    margin-top: -50px;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.button-line { display: contents; }
+
+.pop-up button {
+    width: 40%;
+    margin-right: 28px;
+    background: #6f2879;
+    color: #ffffff;
+    border: 0;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 5px 5px rgb(0 0 0 / 30%);
+}
+
+#delete-confirm { background: #6f2879; }
+#delete-cancel { background: #c5b9ca; }
+
+
+/* -------------------------------------------
+
+    FORM
+
+-------------------------------------------- */
+
+ul { padding-top: 30px; }
+
+ul li {
+    list-style: none;
+    font-size: 17px;
+    padding: 0 10px 15px 20px;
+    user-select: none;
+    cursor: pointer;
+    position: relative;
+}
+
+ul li::before {
+    content: '';
+    position: absolute;
+    height: 25px;
+    width: 25px;
+    border-radius: 20%;
+    background-image: url(/static/images/unchecked.png);
+    background-size: cover;
+    background-position: center;
+    left: -20px;
+}
+
+ul li.checked {
+    color: #645f5f;
+    text-decoration: line-through;
+}
+
+ul li.checked::before {
+    background-image: url(/static/images/checked.png);
+}
+
+ul li span {
+    border: none;
+    font-size: 22px;
+    background-color: white;
+    line-height: 30px;
+    border-radius: 50%;
+    position: absolute;
+    right: 480px;
+    text-align: center;
+}
+
+ul li span:hover {
+    color:#ce80e1;
+}
+
+ul li div {
+    font-size: 12px;
+}
+
+/* -------------------------------------------
+
+    SORTING STYLE PAGE
+
+-------------------------------------------- */
+
+.sort-row {
+    cursor: pointer;
+    position: relative;
+    padding-left: 65px;
+}
+
+.sort-row img {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: -10px;
+    left: 18px;
+}
+
+.sort-icon {
+    border: none;
+    background: none;
+}
+
+.sort-icon:hover {
+    background: none;
+}
+
+.sorting-options {
+    display: none;
+}
+      
+.sort-icon.opened + .sorting-options {
+    display: contents;
+}
+.sorting-options a {
+    color:#6e1e86;
+    padding-right: 10px;
+}
+
+
+/* -------------------------------------------
+
+    BASIC DETAILS PAGE
+
+-------------------------------------------- */
+
+.to-do-list-page .input-field label.company {
+    top: 20px;
+    font-size: 12px;
+    cursor: not-allowed;
+}
