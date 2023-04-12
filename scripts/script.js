@@ -46,7 +46,6 @@ function addTimeLeft(taskData, listElement) {
 
 function renderInitialTasks() {
     const initialTasks = JSON.parse(window.sessionStorage.getItem('tasks'));
-
     initialTasks.forEach(task => {
         const listElement = getListElement(task);
         addDeleteButton(listElement);
@@ -58,6 +57,58 @@ function renderInitialTasks() {
 window.addEventListener('load', () => {
     renderInitialTasks();
 })
+
+let taskId = Object.keys(initialTasks).length +1;
+let openDeleteModalId = null;
+
+// Task added 
+function addTask() {
+    const now = getCurrentDate();
+    const newTask = {};
+
+    if (!inputField.value) {
+        return;
+    }
+    else {
+        newTask.id = taskId;
+        newTask.description = inputField.value;
+        newTask.createdAt = new Date().toISOString();
+        newTask.selectedDate = selectedDate.value;
+        newTask.deadline_ms = new Date(selectedDate.value) - new Date();
+        newTask.deadline = new Date(selectedDate.value);
+        newTask.completedAt = null;
+
+        let taskContent = document.createElement("li");
+        taskContent.innerHTML = inputField.value;
+        taskContent.id = `${taskId}`;
+        taskList.appendChild(taskContent);
+
+        let deleteButton = document.createElement("button");
+        deleteButton.innerHTML = "Delete";
+        taskContent.appendChild(deleteButton);
+
+        let datetime = document.createElement("div");
+        let formatedDate = selectedDate.value
+        var diff = new Date(formatedDate) - new Date();
+        diff = diff/1000;
+        var seconds = Math.floor(diff % 60);
+        diff = diff/60; 
+        var minutes = Math.floor(diff % 60);
+        diff = diff/60; 
+        var hours = Math.floor(diff % 24);  
+        var days = Math.floor(diff/24);
+        datetime.innerHTML = "Time left: " + days + ' days, ' + hours + ' hours, ' + minutes + ' minutes, and ' + seconds + ' seconds';
+        taskContent.appendChild(datetime);
+    
+    }
+
+    inputField.value = "";
+    ++taskId;
+
+    const currentTasksInSessionStorage = JSON.parse(sessionStorage.getItem('tasks'));
+    currentTasksInSessionStorage.push(newTask)
+    window.sessionStorage.setItem('tasks', JSON.stringify(currentTasksInSessionStorage))
+}
 
 // Task checked 
 taskList.addEventListener("click", function(e) {
@@ -93,69 +144,10 @@ taskList.addEventListener("click", function(e) {
 
 }, false);
 
-
-// For Date CountDown
-const today = getCurrentDate();
-let id = Object.keys(initialTasks).length +1;
-let openDeleteModalId = null;
-
-// Task added 
-function addTask() {
-    const now = getCurrentDate();
-    const newTask = {};
-
-    if (!inputField.value) {
-        alert("You must fill task field")
-        return;
-    }
-    else {
-        newTask.id = id;
-        newTask.description = inputField.value;
-        newTask.createdAt = new Date().toISOString();
-        newTask.selectedDate = selectedDate.value;
-        newTask.deadline_ms = new Date(selectedDate.value) - new Date();
-        newTask.deadline = new Date(selectedDate.value);
-        newTask.completedAt = null;
-
-
-        let taskContent = document.createElement("li");
-        taskContent.innerHTML = inputField.value;
-        taskContent.id = `${id}`;
-        taskList.appendChild(taskContent);
-
-        let deleteButton = document.createElement("button");
-        deleteButton.innerHTML = "Delete";
-        taskContent.appendChild(deleteButton);
-
-        let datetime = document.createElement("div");
-        let formatedDate = selectedDate.value
-        var diff = new Date(formatedDate) - new Date();
-        diff = diff/1000;
-        var seconds = Math.floor(diff % 60);
-        diff = diff/60; 
-        var minutes = Math.floor(diff % 60);
-        diff = diff/60; 
-        var hours = Math.floor(diff % 24);  
-        var days = Math.floor(diff/24);
-        datetime.innerHTML = "Time left: " + days + ' days, ' + hours + ' hours, ' + minutes + ' minutes, and ' + seconds + ' seconds';
-        taskContent.appendChild(datetime);
-    
-    }
-
-    inputField.value = "";
-    ++id;
-
-    const currentTasksInSessionStorage = JSON.parse(sessionStorage.getItem('tasks'));
-
-    currentTasksInSessionStorage.push(newTask)
-    window.sessionStorage.setItem('tasks', JSON.stringify(currentTasksInSessionStorage))
-}
-
 // Reset date and time after task submit
 addButton.addEventListener('click', () => {
     selectedDate.value = "yyyy-MM-dd'T'hh:mm:ss.SS";
 })
-
 
 // Task deleted after popup confirmation
 confirmDelete.addEventListener("click", function(e) {
@@ -169,7 +161,6 @@ confirmDelete.addEventListener("click", function(e) {
     popup.classList.remove("open-pop-up")
 });
 
-
 // Pop up closed after popup cancel
 cancelDelete.addEventListener("click", function(e) {
     popup.classList.remove("open-pop-up")
@@ -177,7 +168,7 @@ cancelDelete.addEventListener("click", function(e) {
 
 // Pop up closed after esc button
 document.addEventListener('keyup', function(e) { 
-    if(e.which == 27){
+    if(e.which === 27){
         popup.classList.remove("open-pop-up")
      }
 })
@@ -194,123 +185,60 @@ sortIcon.addEventListener("click", function(e) {
     sortIcon.classList.toggle("opened");
 });
 
+// Task list prepared for sorting
+function renderTasks(tasks) {
+    taskList.innerHTML = "";
+    for (const task of tasks) {
+        const taskContent = document.createElement("li");
+        taskContent.innerHTML = task.description;
+        taskContent.id = task.id;
+        taskList.appendChild(taskContent);
+  
+        const deleteButton = document.createElement("button");
+        deleteButton.innerHTML = "Delete";
+        taskContent.appendChild(deleteButton);
+  
+        if (task.completedAt !== null) {
+            taskContent.classList.add("checked");
+        } 
 
+    const datetime = document.createElement("div");
+    const formatedDate = task.selectedDate;
+    const diff = new Date(formatedDate) - new Date();
+    const seconds = Math.floor(diff % 60);
+    const minutes = Math.floor(diff / 60) % 60;
+    const hours = Math.floor(diff / 3600) % 24;
+    const days = Math.floor(diff / 86400);
+    datetime.innerHTML = "Time left: " + days + ' days, ' + hours + ' hours, ' + minutes + ' minutes, and ' + seconds + ' seconds';
+    taskContent.appendChild(datetime);
+      
+    }
+}
+  
 // Sorting by recently added
 recentlyAddedSort.addEventListener("click", function(e) {
     const currentTasksInSessionStorage = JSON.parse(sessionStorage.getItem('tasks'));
-    const taskList = document.getElementById('task-list');
-
     currentTasksInSessionStorage.sort(function(a,b){
-        return new Date(b.createdAt) - new Date(a.createdAt)
+        return new Date(b.createdAt) - new Date(a.createdAt);
     });
-
-    taskList.innerHTML = "";
-    for (x in currentTasksInSessionStorage){
-        let taskContent = document.createElement("li");
-        taskContent.innerHTML = currentTasksInSessionStorage[x].description;
-        taskContent.id = currentTasksInSessionStorage[x].id;
-        taskList.appendChild(taskContent);
-
-        let deleteButton = document.createElement("button");
-        deleteButton.innerHTML = "Delete";
-        taskContent.appendChild(deleteButton);
-
-        let datetime = document.createElement("div");
-        let formatedDate = currentTasksInSessionStorage[x].selectedDate
-        var diff = new Date(formatedDate) - new Date();
-        diff = diff/1000;
-        var seconds = Math.floor(diff % 60);
-        diff = diff/60; 
-        var minutes = Math.floor(diff % 60);
-        diff = diff/60; 
-        var hours = Math.floor(diff % 24);  
-        var days = Math.floor(diff/24);
-        datetime.innerHTML = "Time left: " + days + ' days, ' + hours + ' hours, ' + minutes + ' minutes, and ' + seconds + ' seconds';
-        taskContent.appendChild(datetime);
-
-        if (currentTasksInSessionStorage[x].completedAt !== null ) {
-            taskContent.classList.add("checked")
-        }
-    }
+    renderTasks(currentTasksInSessionStorage);
 });
-
+  
 // Sorting by deadline
 deadlineSort.addEventListener("click", function(e) {
     const currentTasksInSessionStorage = JSON.parse(sessionStorage.getItem('tasks'));
-    const taskList = document.getElementById('task-list');
-
     currentTasksInSessionStorage.sort(function(a,b){
-        return new Date(a.deadline_ms) - new Date(b.deadline_ms) 
+        return new Date(a.deadline_ms) - new Date(b.deadline_ms);
     });
-    
-    taskList.innerHTML = "";
-    for (x in currentTasksInSessionStorage){
-        let taskContent = document.createElement("li");
-        taskContent.innerHTML = currentTasksInSessionStorage[x].description;
-        taskContent.id = currentTasksInSessionStorage[x].id;
-        taskList.appendChild(taskContent);
-
-        let deleteButton = document.createElement("button");
-        deleteButton.innerHTML = "Delete";
-        taskContent.appendChild(deleteButton);
-
-        let datetime = document.createElement("div");
-        let formatedDate = currentTasksInSessionStorage[x].selectedDate
-        var diff = new Date(formatedDate) - new Date();
-        diff = diff/1000;
-        var seconds = Math.floor(diff % 60);
-        diff = diff/60; 
-        var minutes = Math.floor(diff % 60);
-        diff = diff/60; 
-        var hours = Math.floor(diff % 24);  
-        var days = Math.floor(diff/24);
-        datetime.innerHTML = "Time left: " + days + ' days, ' + hours + ' hours, ' + minutes + ' minutes, and ' + seconds + ' seconds';
-        taskContent.appendChild(datetime);
-
-        if (currentTasksInSessionStorage[x].completedAt !== null ) {
-            taskContent.classList.add("checked")
-        }
-    }
+    renderTasks(currentTasksInSessionStorage);
 });
-
-
+  
 // Sorting by completed items
 recentlyCompletedSort.addEventListener("click", function(e) {
     const currentTasksInSessionStorage = JSON.parse(sessionStorage.getItem('tasks'));
-    const taskList = document.getElementById('task-list');
-
-    currentTasksInSessionStorage.sort(function(a,b){
-        return new Date(b.completedAt)  - new Date(a.completedAt) 
+    currentTasksInSessionStorage.sort(function(a, b) {
+        return (b.completedAt === null)-(a.completedAt === null);
     });
-    
-    taskList.innerHTML = "";
-    for (x in currentTasksInSessionStorage){
-        let taskContent = document.createElement("li");
-        taskContent.innerHTML = currentTasksInSessionStorage[x].description;
-        taskContent.id = currentTasksInSessionStorage[x].id;
-        taskList.appendChild(taskContent);
-
-        let deleteButton = document.createElement("button");
-        deleteButton.innerHTML = "Delete";
-        taskContent.appendChild(deleteButton);
-
-        let datetime = document.createElement("div");
-        let formatedDate = currentTasksInSessionStorage[x].selectedDate
-        var diff = new Date(formatedDate) - new Date();
-        diff = diff/1000;
-        var seconds = Math.floor(diff % 60);
-        diff = diff/60; 
-        var minutes = Math.floor(diff % 60);
-        diff = diff/60; 
-        var hours = Math.floor(diff % 24);  
-        var days = Math.floor(diff/24);
-        datetime.innerHTML = "Time left: " + days + ' days, ' + hours + ' hours, ' + minutes + ' minutes, and ' + seconds + ' seconds';
-        taskContent.appendChild(datetime);
-
-        if (currentTasksInSessionStorage[x].completedAt !== null) {
-            taskContent.classList.add("checked")
-        } 
-    }
+    renderTasks(currentTasksInSessionStorage);
 });
-
 

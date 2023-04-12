@@ -8,7 +8,8 @@
         <script src="scripts/setInitialData.js"></script>
     </head>
 <body>
-    <div class="container">
+    <!-- Sutraukti ir nekartoti funkciju -->
+    <form>
         <div class="to-do-app">
             <h1>To Do List</h1>
             <div class="set-task">
@@ -28,7 +29,7 @@
                 </div>
             </div>
             <div class="sort-row">
-                <button id="sort" class="sort-icon"><img src="/static/images/filter.png"></button>
+                <button id="sort" class="sort-icon"><img src="/static/images/filter.png" alt="sorting icon"></button>
                 <div class="sorting-options">
                     <a id="recently-added" href="##">Recently added</a>
                     <a id="deadline" href="##">Deadline</a>
@@ -37,7 +38,7 @@
             </div>
             <ul id="task-list"></ul>
             <div class="pop-up" id="pop-up">
-                <img src="/static/images/question-mark.png">
+                <img src="/static/images/question-mark.png" alt="question mark">
                 <h2>Are you sure?</h2>
                 <p>Do you really want to delete this record? This process cannot be undone</p>
                 <div class="button-line">
@@ -46,7 +47,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </form>
     <script src="/scripts/script.js"></script>
 </body>
 </html>
